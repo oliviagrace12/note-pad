@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/Body"
+        android:id="@+id/content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/last_edited"
-        app:layout_constraintEnd_toEndOf="@+id/Body"
-        app:layout_constraintStart_toStartOf="@+id/Body"
-        app:layout_constraintTop_toBottomOf="@+id/Body" />
+        app:layout_constraintEnd_toEndOf="@+id/content"
+        app:layout_constraintStart_toStartOf="@+id/content"
+        app:layout_constraintTop_toBottomOf="@+id/content" />
 </androidx.constraintlayout.widget.ConstraintLayout>

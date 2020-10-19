@@ -22,8 +22,9 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
-        EditText titleView = findViewById(R.id.title);
-        EditText contentView = findViewById(R.id.content);
+        EditText titleView = findViewById(R.id.editTitle);
+        EditText contentView = findViewById(R.id.editContent);
+
 
         Intent intent = getIntent();
         if (intent.hasExtra("Note")) {
@@ -51,8 +52,8 @@ public class EditNoteActivity extends AppCompatActivity {
 //
 
     public void doReturn(View v) {
-        EditText titleView = findViewById(R.id.title);
-        EditText contentView = findViewById(R.id.content);
+        EditText titleView = findViewById(R.id.editTitle);
+        EditText contentView = findViewById(R.id.editContent);
 
         if(titleView.getText() == null) {
             return;
@@ -72,6 +73,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // TODO add confirmation dialog asking if user wants to save
         doReturn(null);
         super.onBackPressed();
     }

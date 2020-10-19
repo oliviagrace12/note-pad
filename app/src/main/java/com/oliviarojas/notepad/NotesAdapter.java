@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
@@ -37,11 +36,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
 
         holder.title.setText(note.getTitle());
         holder.contents.setText(note.getContents());
-        holder.lastEdited.setText(note.getLastEdited().toString());
+        holder.lastEdited.setText(String.valueOf(note.getLastEdited().getTime()));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return notes.size();
     }
 }

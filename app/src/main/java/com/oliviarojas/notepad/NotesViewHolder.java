@@ -14,6 +14,8 @@ public class NotesViewHolder extends RecyclerView.ViewHolder  {
 
     public NotesViewHolder(@NonNull View itemView) {
         super(itemView);
-
+        title = itemView.findViewById(R.id.title);
+        contents = itemView.findViewById(R.id.content);
+        lastEdited = itemView.findViewById(R.id.lastEdited);
     }
 }

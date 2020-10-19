@@ -18,6 +18,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
+    private static final int NEW_NOTE = 123;
     private RecyclerView recyclerView;
     private List<Note> notes = new ArrayList<>();
     private NotesAdapter adapter;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // TODO load notes from user preferences and add to notes list
 
         recyclerView = findViewById(R.id.recycler);
         adapter = new NotesAdapter(notes, this);
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.newNote:
                 Intent intent = new Intent(this, EditNoteActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, NEW_NOTE);
                 break;
             case R.id.info:
                 Toast.makeText(this, "Get info", Toast.LENGTH_SHORT).show();
@@ -74,14 +77,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (data != null) {
-                Note note = (Note) data.getSerializableExtra("Note");
-                if (note != null) {
-                    Toast.makeText(this, note.getTitle(), Toast.LENGTH_SHORT).show();
+        if (requestCode == NEW_NOTE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    Note note = (Note) data.getSerializableExtra("Note");
+                    if (note != null) {
+                        Toast.makeText(this, note.getTitle(), Toast.LENGTH_SHORT).show();
+                        notes.add(note);
+                    }
                 }
             }
         }
+        adapter.notifyDataSetChanged();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // TODO save notes to user preferences
     }
 }

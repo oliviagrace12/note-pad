@@ -8,12 +8,12 @@
     tools:context=".EditNoteActivity">
 
     <EditText
-        android:id="@+id/title"
+        android:id="@+id/editTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@color/colorPrimary"
         android:ems="10"
         android:hint="@string/title"
@@ -25,21 +25,19 @@
         android:importantForAutofill="no" />
 
     <EditText
-        android:id="@+id/content"
+        android:id="@+id/editContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@color/colorPrimary"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="@string/note"
-        android:importantForAutofill="no"
+        android:hint="@string/add_note_here"
         android:inputType="textMultiLine"
-        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editTitle"
+        android:importantForAutofill="no" />
 </androidx.constraintlayout.widget.ConstraintLayout>
