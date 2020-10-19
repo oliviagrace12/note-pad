@@ -1,19 +1,36 @@
 package com.oliviarojas.notepad;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Adapter;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+
+    private RecyclerView recyclerView;
+    private List<Note> notes = new ArrayList<>();
+    private NotesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        recyclerView = findViewById(R.id.recycler);
+        adapter = new NotesAdapter(notes, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -26,10 +43,45 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.newNote:
-                Toast.makeText(this, "Create a new note", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, EditNoteActivity.class);
+                startActivity(intent);
+                break;
             case R.id.info:
                 Toast.makeText(this, "Get info", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (notes.isEmpty()) {
+            return;
+        }
+        int pos = recyclerView.getChildLayoutPosition(v);
+        Note note = notes.get(pos);
+
+        Intent intent = new Intent(this, EditNoteActivity.class);
+        intent.putExtra("Note", note);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (data != null) {
+                Note note = (Note) data.getSerializableExtra("Note");
+                if (note != null) {
+                    Toast.makeText(this, note.getTitle(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
     }
 }

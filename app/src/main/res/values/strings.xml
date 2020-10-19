@@ -2,4 +2,9 @@
     <string name="app_name">Note Pad</string>
     <string name="info">Info</string>
     <string name="new_note">New Note</string>
+    <string name="title">Title</string>
+    <string name="note">Note</string>
+    <string name="save">Save</string>
+    <string name="last_edited">Last edited</string>
+    <string name="body">Body</string>
 </resources>
