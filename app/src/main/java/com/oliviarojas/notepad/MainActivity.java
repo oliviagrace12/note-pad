@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,6 +18,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private static final int NEW_NOTE = 123;
+    private static final int EDIT_NOTE = 124;
+    private static final String POSITION = "Position";
+    private static final String NOTE = "Note";
     private RecyclerView recyclerView;
     private List<Note> notes = new ArrayList<>();
     private NotesAdapter adapter;
@@ -60,16 +62,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (notes.isEmpty()) {
             return;
         }
-        int pos = recyclerView.getChildLayoutPosition(v);
-        Note note = notes.get(pos);
+        int position = recyclerView.getChildLayoutPosition(v);
+        Note note = notes.get(position);
 
         Intent intent = new Intent(this, EditNoteActivity.class);
-        intent.putExtra("Note", note);
-        startActivity(intent);
+        intent.putExtra(NOTE, note);
+        intent.putExtra(POSITION, position);
+        startActivityForResult(intent, EDIT_NOTE);
     }
 
     @Override
     public boolean onLongClick(View v) {
+        // TODO
         return false;
     }
 
@@ -77,15 +81,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK || data == null) {
+            return;
+        }
         if (requestCode == NEW_NOTE) {
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    Note note = (Note) data.getSerializableExtra("Note");
-                    if (note != null) {
-                        Toast.makeText(this, note.getTitle(), Toast.LENGTH_SHORT).show();
-                        notes.add(note);
-                    }
-                }
+            Note note = (Note) data.getSerializableExtra(NOTE);
+            if (note != null) {
+                notes.add(note);
+            }
+        } else if (requestCode == EDIT_NOTE) {
+            Note note = (Note) data.getSerializableExtra(NOTE);
+            int position = data.getIntExtra(POSITION, notes.size());
+            if (note != null) {
+                notes.set(position, note);
             }
         }
         adapter.notifyDataSetChanged();

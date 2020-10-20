@@ -16,6 +16,7 @@ import java.util.Date;
 public class EditNoteActivity extends AppCompatActivity {
 
     private Note note;
+    private Integer position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +30,14 @@ public class EditNoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra("Note")) {
             note = (Note) intent.getSerializableExtra("Note");
+            position = intent.getIntExtra("Position", 0);
             if (note != null) {
                 titleView.setText(note.getTitle());
                 contentView.setText(note.getContents());
             }
         } else {
             note = new Note();
+            position = null;
         }
     }
 
@@ -44,30 +47,34 @@ public class EditNoteActivity extends AppCompatActivity {
         return true;
     }
 
-    // TODO saving from menu item makes app crash
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        doReturn(null);
-//        return super.onOptionsItemSelected(item);
-//
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        doReturn(null);
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void doReturn(View v) {
         EditText titleView = findViewById(R.id.editTitle);
         EditText contentView = findViewById(R.id.editContent);
 
-        if(titleView.getText() == null) {
-            return;
-        }
-        note.setTitle(titleView.getText().toString());
-        Toast.makeText(this, "Saving note " + note.getTitle(), Toast.LENGTH_SHORT).show();
-        if (contentView.getText() != null) {
-            note.setContents(contentView.getText().toString());
-        }
-        note.setLastEdited(new Date());
+        if (titleView.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Could not save note with no title", Toast.LENGTH_SHORT).show();
+        } else {
+            note.setTitle(titleView.getText().toString());
+            Toast.makeText(this, "Saving note " + note.getTitle(), Toast.LENGTH_SHORT).show();
+            if (contentView.getText() != null) {
+                note.setContents(contentView.getText().toString());
+            }
+            note.setLastEdited(new Date());
 
-        Intent intent = new Intent();
-        intent.putExtra("Note", note);
-        setResult(RESULT_OK, intent);
+            Intent intent = new Intent();
+            intent.putExtra("Note", note);
+            if (position != null) {
+                intent.putExtra("Position", position);
+            }
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 
