@@ -1,10 +1,12 @@
 package com.oliviarojas.notepad;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -72,9 +74,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean onLongClick(View v) {
-        // TODO
-        return false;
+    public boolean onLongClick(final View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.baseline_save_24);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                int position = recyclerView.getChildLayoutPosition(v);
+                notes.remove(position);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        builder.setMessage("Delete note?");
+        builder.setTitle("Delete?");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return true;
     }
 
 

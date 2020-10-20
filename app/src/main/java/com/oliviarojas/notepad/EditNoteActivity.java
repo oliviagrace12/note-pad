@@ -1,7 +1,9 @@
 package com.oliviarojas.notepad;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -80,8 +82,22 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // TODO add confirmation dialog asking if user wants to save
-        doReturn(null);
-        super.onBackPressed();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.baseline_save_24);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                doReturn(null);
+                EditNoteActivity.super.onBackPressed();
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                EditNoteActivity.super.onBackPressed();
+            }
+        });
+        builder.setMessage("Would you like to save this note?");
+        builder.setTitle("Save?");
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
