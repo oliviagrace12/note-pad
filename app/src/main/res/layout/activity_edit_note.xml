@@ -17,12 +17,12 @@
         android:background="@color/colorPrimary"
         android:ems="10"
         android:hint="@string/title"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editContent"
