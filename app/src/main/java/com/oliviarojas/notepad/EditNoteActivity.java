@@ -67,7 +67,6 @@ public class EditNoteActivity extends AppCompatActivity {
             Toast.makeText(this, "Saving note " + note.getTitle(), Toast.LENGTH_SHORT).show();
             if (contentView.getText() != null) {
                 note.setContents(contentView.getText().toString());
-                note.setLastEdited(new Date());
             }
             note.setLastEdited(new Date());
 

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Note note = new Note();
                 note.setTitle(noteJson.getString(getString(R.string.title)));
                 note.setContents(noteJson.getString(getString(R.string.contents)));
-                note.setLastEdited(new Date(noteJson.getInt(getString(R.string.last_edited))));
+                note.setLastEdited(new Date(noteJson.getLong(getString(R.string.last_edited))));
                 savedNotes.add(note);
             }
         } catch (FileNotFoundException e) {
@@ -129,17 +129,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onLongClick(final View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.baseline_save_24);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                int position = recyclerView.getChildLayoutPosition(v);
-                notes.remove(position);
-                adapter.notifyDataSetChanged();
-            }
+        builder.setPositiveButton("OK", (dialog, id) -> {
+            int position = recyclerView.getChildLayoutPosition(v);
+            notes.remove(position);
+            adapter.notifyDataSetChanged();
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
+        builder.setNegativeButton("CANCEL", (dialog, id) -> {});
         builder.setMessage("Delete note?");
         builder.setTitle("Delete?");
         AlertDialog dialog = builder.create();
@@ -167,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 notes.set(position, note);
             }
         }
+        notes.sort((n1, n2) -> ((n1.getLastEdited().compareTo(n2.getLastEdited())) * -1));
         adapter.notifyDataSetChanged();
     }
 
