@@ -64,7 +64,6 @@ public class EditNoteActivity extends AppCompatActivity {
             Toast.makeText(this, "Could not save note with no title", Toast.LENGTH_SHORT).show();
         } else {
             note.setTitle(titleView.getText().toString());
-            Toast.makeText(this, "Saving note " + note.getTitle(), Toast.LENGTH_SHORT).show();
             if (contentView.getText() != null) {
                 note.setContents(contentView.getText().toString());
             }

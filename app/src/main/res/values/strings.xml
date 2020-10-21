@@ -15,4 +15,8 @@
     <string name="encoding">UTF-8</string>
     <string name="notes">Notes</string>
     <string name="no_file">No JSON Saved Notes file present</string>
+    <string name="note_pad">Note Pad</string>
+    <string name="version_string">Version 1.0</string>
+    <string name="copyright">Copyright 2020, Olivia Chisman</string>
+    <string name="background_image">background image</string>
 </resources>

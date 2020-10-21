@@ -85,10 +85,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 note.setLastEdited(new Date(noteJson.getLong(getString(R.string.last_edited))));
                 savedNotes.add(note);
             }
-        } catch (FileNotFoundException e) {
-            Toast.makeText(this, getString(R.string.no_file), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "loadSavedNotes: ", e);
         }
         return savedNotes;
     }
@@ -103,11 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.newNote:
-                Intent intent = new Intent(this, EditNoteActivity.class);
-                startActivityForResult(intent, NEW_NOTE);
+                startActivityForResult(new Intent(this, EditNoteActivity.class), NEW_NOTE);
                 break;
             case R.id.info:
-                Toast.makeText(this, "Get info", Toast.LENGTH_SHORT).show();
+                startActivityForResult(new Intent(this, InfoActivity.class), NEW_NOTE);
         }
         return super.onOptionsItemSelected(item);
     }
