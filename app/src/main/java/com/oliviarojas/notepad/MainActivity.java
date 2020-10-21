@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -181,35 +182,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     openFileOutput(getString(R.string.file_name), Context.MODE_PRIVATE);
 
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(fos, getString(R.string.encoding)));
-            writer.setIndent("  ");
-            writer.beginArray();
-            for (Note note : notes) {
-                writer.beginObject();
-                writer.name(getString(R.string.title)).value(note.getTitle());
-                writer.name(getString(R.string.contents)).value(note.getContents());
-                writer.name(getString(R.string.last_edited)).value(note.getLastEdited().getTime());
-                writer.endObject();
-            }
-            writer.endArray();
-            writer.close();
+            buildJson(wr);
 
             // LOGGING
             StringWriter sw = new StringWriter();
             writer = new JsonWriter(sw);
-            writer.setIndent("  ");
-            writer.beginArray();
-            for (Note note : notes) {
-                writer.beginObject();
-                writer.name(getString(R.string.title)).value(note.getTitle());
-                writer.name(getString(R.string.contents)).value(note.getContents());
-                writer.name(getString(R.string.last_edited)).value(note.getLastEdited().getTime());
-                writer.endObject();
-            }
-            writer.endArray();
-            writer.close();
+            buildJson(writer);
             Log.d(TAG, "Saving notes: \n" + sw.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void buildJson(JsonWriter writer) throws IOException {
+        writer.setIndent("  ");
+        writer.beginArray();
+        for (Note note : notes) {
+            writer.beginObject();
+            writer.name(getString(R.string.title)).value(note.getTitle());
+            writer.name(getString(R.string.contents)).value(note.getContents());
+            writer.name(getString(R.string.last_edited)).value(note.getLastEdited().getTime());
+            writer.endObject();
+        }
+        writer.endArray();
+        writer.close();
     }
 }
