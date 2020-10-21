@@ -7,18 +7,36 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.JsonReader;
+import android.util.JsonWriter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+
+    private static final String TAG = "MainActivity";
 
     private static final int NEW_NOTE = 123;
     private static final int EDIT_NOTE = 124;
@@ -33,14 +51,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO load notes from user preferences and add to notes list
-
         recyclerView = findViewById(R.id.recycler);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
         adapter = new NotesAdapter(notes, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        List<Note> savedNotes = loadSavedNotes();
+        notes.addAll(savedNotes);
+        adapter.notifyDataSetChanged();
+    }
+
+    private List<Note> loadSavedNotes() {
+        List<Note> savedNotes = new ArrayList<>();
+        try {
+            InputStream is = getApplicationContext().openFileInput(getString(R.string.file_name));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            JSONArray jsonArray = new JSONArray(sb.toString());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject noteJson = jsonArray.getJSONObject(i);
+                Note note = new Note();
+                note.setTitle(noteJson.getString(getString(R.string.title)));
+                note.setContents(noteJson.getString(getString(R.string.contents)));
+                note.setLastEdited(new Date(noteJson.getInt(getString(R.string.last_edited))));
+                savedNotes.add(note);
+            }
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, getString(R.string.no_file), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return savedNotes;
     }
 
     @Override
@@ -123,7 +172,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onPause() {
+        if (!notes.isEmpty()) {
+            saveNotes();
+        }
+
         super.onPause();
-        // TODO save notes to user preferences
+    }
+
+    private void saveNotes() {
+        try {
+            FileOutputStream fos = getApplicationContext().
+                    openFileOutput(getString(R.string.file_name), Context.MODE_PRIVATE);
+
+            JsonWriter writer = new JsonWriter(new OutputStreamWriter(fos, getString(R.string.encoding)));
+            writer.setIndent("  ");
+            writer.beginArray();
+            for (Note note : notes) {
+                writer.beginObject();
+                writer.name(getString(R.string.title)).value(note.getTitle());
+                writer.name(getString(R.string.contents)).value(note.getContents());
+                writer.name(getString(R.string.last_edited)).value(note.getLastEdited().getTime());
+                writer.endObject();
+            }
+            writer.endArray();
+            writer.close();
+
+            // LOGGING
+            StringWriter sw = new StringWriter();
+            writer = new JsonWriter(sw);
+            writer.setIndent("  ");
+            writer.beginArray();
+            for (Note note : notes) {
+                writer.beginObject();
+                writer.name(getString(R.string.title)).value(note.getTitle());
+                writer.name(getString(R.string.contents)).value(note.getContents());
+                writer.name(getString(R.string.last_edited)).value(note.getLastEdited().getTime());
+                writer.endObject();
+            }
+            writer.endArray();
+            writer.close();
+            Log.d(TAG, "Saving notes: \n" + sw.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

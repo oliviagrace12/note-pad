@@ -67,6 +67,7 @@ public class EditNoteActivity extends AppCompatActivity {
             Toast.makeText(this, "Saving note " + note.getTitle(), Toast.LENGTH_SHORT).show();
             if (contentView.getText() != null) {
                 note.setContents(contentView.getText().toString());
+                note.setLastEdited(new Date());
             }
             note.setLastEdited(new Date());
 
@@ -84,13 +85,13 @@ public class EditNoteActivity extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.baseline_save_24);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 doReturn(null);
                 EditNoteActivity.super.onBackPressed();
             }
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("DON'T SAVE", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditNoteActivity.super.onBackPressed();
             }
