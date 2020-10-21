@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     openFileOutput(getString(R.string.file_name), Context.MODE_PRIVATE);
 
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(fos, getString(R.string.encoding)));
-            buildJson(wr);
+            buildJson(writer);
 
             // LOGGING
             StringWriter sw = new StringWriter();
